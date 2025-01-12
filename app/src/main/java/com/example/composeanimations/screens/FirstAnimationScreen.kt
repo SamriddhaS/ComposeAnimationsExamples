@@ -1,6 +1,7 @@
 package com.example.composeanimations.screens
 
 import android.util.Log
+import androidx.compose.animation.Animatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,21 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.Spring.DampingRatioLowBouncy
+import androidx.compose.animation.core.Spring.DampingRatioMediumBouncy
+import androidx.compose.animation.core.Spring.StiffnessMediumLow
+import androidx.compose.animation.core.SpringSpec
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.util.lerp
+
+const val TAG = "FirstAnimationScreen"
 
 @Composable
 fun FirstScreen(modifier: Modifier = Modifier) {
@@ -47,14 +63,43 @@ fun FirstScreen(modifier: Modifier = Modifier) {
 
         val coroutineScope = rememberCoroutineScope()
 
+        val drawerWidth = with(LocalDensity.current) {
+            DrawerWidth.toPx()
+        }
+
+        val translationX = remember {
+            Animatable(0f)
+        }
+
         fun toggleDrawerState() {
             coroutineScope.launch {
                 Log.d("First Screen", "toggleDrawer")
                 drawerState = if (drawerState == DrawerState.Open) {
+                    translationX.animateTo(
+                        0f,
+                        animationSpec = spring(
+                            dampingRatio = DampingRatioLowBouncy,
+                            stiffness = StiffnessMediumLow,
+                        )
+                    )
                     DrawerState.Closed
                 } else {
+                    translationX.animateTo(drawerWidth
+                    ,spring(
+                            dampingRatio =  DampingRatioMediumBouncy,
+                            stiffness = StiffnessMediumLow
+                    )
+                    )
                     DrawerState.Open
                 }
+            }
+        }
+
+        val draggableState = rememberDraggableState {
+            dragAmmount ->
+            Log.d(TAG, "delta value : $dragAmmount")
+            coroutineScope.launch{
+                translationX.snapTo(translationX.value+dragAmmount)
             }
         }
 
@@ -65,20 +110,31 @@ fun FirstScreen(modifier: Modifier = Modifier) {
             }
         )
 
-        val drawerWidth = with(LocalDensity.current) {
-            DrawerWidth.toPx()
-        }
-
         MainContent(
             toggleDrawer = { toggleDrawerState() },
+            /**
+            * "graphics layer" modifier runs in the draw phase of compose
+             * life cycle. So animating with this modifier doesn't cause recompositions.
+            * */
             modifier = modifier.graphicsLayer {
-                this.translationX = if (drawerState==DrawerState.Open) drawerWidth else 0f
-                this.scaleX = if (drawerState==DrawerState.Open) 0.8f else 1f
-                this.scaleY = if (drawerState==DrawerState.Open) 0.8f else 1f
-                val cornerShape = if(drawerState==DrawerState.Open) 32.dp.toPx() else 0.dp.toPx()
-                this.shape = RoundedCornerShape(cornerShape)
+                this.translationX = translationX.value
+                // lerp = linearly interpolate between two values 1 - 0.8
+                val scale = lerp(1f,0.8f,translationX.value/drawerWidth)
+                this.scaleX = scale
+                this.scaleY = scale
+
+                //As we have added DampingRatioMediumBouncy to the spring animation
+                //because of the bouncyness it is possible that translationX values
+                // sometimes goes to negative. By added this condition checking we make
+                // sure it doesn't causes an crash as Corner radius can never be in negative.
+                val transXToPositive = if(translationX.value<0f) 0f else translationX.value
+                // Linearly interpolate the rounded corer size. from 0 -> 32 and 32 -> 0.
+                val cornerShapeInterpolator = lerp( 0.dp.toPx(),32.dp.toPx(),transXToPositive/drawerWidth)
+                this.shape = RoundedCornerShape(cornerShapeInterpolator)
                 this.clip = true
             }
+                // To make this particular composable draggable
+                .draggable(draggableState,Orientation.Horizontal)
         )
     }
 }
