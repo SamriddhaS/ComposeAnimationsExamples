@@ -163,15 +163,33 @@ fun FirstScreen(modifier: Modifier = Modifier) {
                         val targetX = if (decayX>drawerWidth*0.5) drawerWidth else 0f
                         val canReachTargetWithDecay = (decayX>targetX && targetX == drawerWidth) ||
                                 (decayX<targetX && targetX==0f)
-                        if (canReachTargetWithDecay) {
-                            translationX.animateDecay(
+                        if (targetX==drawerWidth) {
+//                            translationX.animateDecay(
+//                                initialVelocity = velocity,
+//                                animationSpec = decay
+//                            )
+                            //translationX.animateTo(targetX, initialVelocity = velocity)
+                            translationX.animateTo(targetX,
                                 initialVelocity = velocity,
-                                animationSpec = decay
+                                animationSpec = spring(
+                                    dampingRatio =  DampingRatioMediumBouncy,
+                                    stiffness = StiffnessMediumLow
+                                )
                             )
+                            DrawerState.Open
                         }else{
-                            translationX.animateTo(targetX, initialVelocity = velocity)
+                            //translationX.animateTo(0f, initialVelocity = velocity)
+                            translationX.animateTo(
+                                0f,
+                                initialVelocity = velocity,
+                                animationSpec = spring(
+                                    dampingRatio = DampingRatioLowBouncy,
+                                    stiffness = StiffnessMediumLow,
+                                )
+                            )
+                            DrawerState.Closed
                         }
-                        drawerState = if (targetX==drawerWidth) DrawerState.Open else DrawerState.Closed
+                        //drawerState = if (targetX==drawerWidth) DrawerState.Open else DrawerState.Closed
                     }
 
                 })
