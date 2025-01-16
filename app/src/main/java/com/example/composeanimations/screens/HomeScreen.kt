@@ -24,9 +24,19 @@ fun HomeScreen(modifier: Modifier = Modifier, navigateTo:(route:String)->Unit) {
                 .padding(18.dp)
                 .fillMaxWidth(0.8f)
                 .align(Alignment.CenterHorizontally)
-            , onClick = {navigateTo(Routes.FIRST_ANIMATION)}
+            , onClick = {navigateTo(Routes.ANIMATED_DRAWER_SCREEN)}
         ) {
-            Text(text = "First Animation")
+            Text(text = "Animated Drawer")
+        }
+
+        Button(
+            modifier = Modifier
+                .padding(18.dp)
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally)
+            , onClick = {navigateTo(Routes.ANIMATED_DRAWER_WITH_ANCHOR_SCREEN)}
+        ) {
+            Text(text = "Animated Drawer With Anchor")
         }
     }
 }

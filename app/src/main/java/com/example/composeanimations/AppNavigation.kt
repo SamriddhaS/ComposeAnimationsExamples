@@ -9,13 +9,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.composeanimations.screens.FirstScreen
+import com.example.composeanimations.screens.AnimatedDrawerScreen
+import com.example.composeanimations.screens.AnimatedDrawerUsingAnchorScreen
 import com.example.composeanimations.screens.HomeScreen
 import com.example.composeanimations.ui.theme.ComposeAnimationsTheme
 
 object Routes{
     const val HOME_SCREEN = "home_screen"
-    const val FIRST_ANIMATION = "first_animation_screen"
+    const val ANIMATED_DRAWER_SCREEN = "animated_drawer_screen"
+    const val ANIMATED_DRAWER_WITH_ANCHOR_SCREEN = "animated_drawer_with_anchor_screen"
 }
 
 @Composable
@@ -35,8 +37,14 @@ fun AppNavHost(
             )
         }
 
-        composable(route = Routes.FIRST_ANIMATION){
-            FirstScreen (
+        composable(route = Routes.ANIMATED_DRAWER_SCREEN){
+            AnimatedDrawerScreen (
+                modifier = modifier
+            )
+        }
+
+        composable(route = Routes.ANIMATED_DRAWER_WITH_ANCHOR_SCREEN){
+            AnimatedDrawerUsingAnchorScreen (
                 modifier = modifier
             )
         }
