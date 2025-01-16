@@ -36,17 +36,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.Spring.DampingRatioLowBouncy
 import androidx.compose.animation.core.Spring.DampingRatioMediumBouncy
 import androidx.compose.animation.core.Spring.StiffnessMediumLow
-import androidx.compose.animation.core.SpringSpec
-import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.calculateTargetValue
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.util.lerp
 
 const val TAG = "FirstAnimationScreen"
@@ -110,6 +108,11 @@ fun FirstScreen(modifier: Modifier = Modifier) {
             }
         )
 
+        /**
+        * Will help us to calculate trasnaltionX value in case of Flinch Gesture.
+        * */
+        val decay = rememberSplineBasedDecay<Float>()
+
         MainContent(
             toggleDrawer = { toggleDrawerState() },
             /**
@@ -118,23 +121,60 @@ fun FirstScreen(modifier: Modifier = Modifier) {
             * */
             modifier = modifier.graphicsLayer {
                 this.translationX = translationX.value
-                // lerp = linearly interpolate between two values 1 - 0.8
+                /**
+                 * lerp = linearly interpolate between two values 1 - 0.8
+                * */
                 val scale = lerp(1f,0.8f,translationX.value/drawerWidth)
                 this.scaleX = scale
                 this.scaleY = scale
-
-                //As we have added DampingRatioMediumBouncy to the spring animation
-                //because of the bouncyness it is possible that translationX values
-                // sometimes goes to negative. By added this condition checking we make
-                // sure it doesn't causes an crash as Corner radius can never be in negative.
+                /**
+                 * As we have added DampingRatioMediumBouncy to the spring animation,
+                 * because of the bouncyness it is possible that translationX values
+                 * sometimes goes to negative. By added this condition checking we make
+                 * sure it doesn't causes an crash as Corner radius can never be in negative.
+                * */
                 val transXToPositive = if(translationX.value<0f) 0f else translationX.value
-                // Linearly interpolate the rounded corer size. from 0 -> 32 and 32 -> 0.
+
+                /**
+                 * Linearly interpolate the rounded corer size. from 0 -> 32 and 32 -> 0.
+                * */
                 val cornerShapeInterpolator = lerp( 0.dp.toPx(),32.dp.toPx(),transXToPositive/drawerWidth)
                 this.shape = RoundedCornerShape(cornerShapeInterpolator)
                 this.clip = true
             }
-                // To make this particular composable draggable
-                .draggable(draggableState,Orientation.Horizontal)
+                /**
+                * Linearly interpolate the rounded corer size. from 0 -> 32 and 32 -> 0.
+                * */
+                .draggable(draggableState,Orientation.Horizontal, onDragStopped = {
+                    /**
+                     * This Callback gives us velocity of the gesture, we can use this value to
+                     * calculate where the gusture would have ended given if it had continued with
+                     * this velocity.
+                    * */
+                    velocity: Float ->
+                    // This is where the gesture will have naturally stopped if it had
+                    // continued with current velocity
+                    val decayX = decay.calculateTargetValue(
+                        translationX.value,
+                        velocity
+                    )
+
+                    coroutineScope.launch {
+                        val targetX = if (decayX>drawerWidth*0.5) drawerWidth else 0f
+                        val canReachTargetWithDecay = (decayX>targetX && targetX == drawerWidth) ||
+                                (decayX<targetX && targetX==0f)
+                        if (canReachTargetWithDecay) {
+                            translationX.animateDecay(
+                                initialVelocity = velocity,
+                                animationSpec = decay
+                            )
+                        }else{
+                            translationX.animateTo(targetX, initialVelocity = velocity)
+                        }
+                        drawerState = if (targetX==drawerWidth) DrawerState.Open else DrawerState.Closed
+                    }
+
+                })
         )
     }
 }
