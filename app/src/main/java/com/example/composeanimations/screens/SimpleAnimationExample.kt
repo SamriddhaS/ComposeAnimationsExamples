@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.foundation.background
@@ -13,6 +14,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,7 +53,7 @@ fun AnimationSpecScreen(modifier: Modifier = Modifier) {
             VisibilityAnimation(modifier = Modifier.weight(1f))
         }
 
-        AnimateComposableSize()
+        AnimateComposableSize(Modifier.fillMaxWidth())
 
         Row(
             modifier = Modifier
@@ -159,12 +161,26 @@ fun VisibilityAnimation(modifier: Modifier = Modifier) {
 @Composable
 fun AnimateComposableSize(modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
+
+    /*
+    * We can animate any dp value like this. Here we are animating the padding value
+    * */
+    val animatedPadding by animateDpAsState(
+        if (expanded) {
+            20.dp
+        } else {
+            0.dp
+        },
+        label = "padding"
+    )
+
     Box(
-        modifier = Modifier
+        modifier = modifier
+            .padding(animatedPadding)
             .background(Color.Blue)
+            .fillMaxWidth()
             .animateContentSize()
             .height(if (expanded) 200.dp else 100.dp)
-            .fillMaxWidth()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
