@@ -48,5 +48,15 @@ fun HomeScreen(modifier: Modifier = Modifier, navigateTo:(route:String)->Unit) {
         ) {
             Text(text = "Basic Animations")
         }
+
+        Button(
+            modifier = Modifier
+                .padding(18.dp)
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally)
+            , onClick = {navigateTo(Routes.CARD_ANIMATIONS_SCREEN)}
+        ) {
+            Text(text = "Cards Animations")
+        }
     }
 }
