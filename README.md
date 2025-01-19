@@ -27,7 +27,10 @@ This repository demonstrates a variety of animation techniques in Jetpack Compos
 
 <h2>🎥 Preview</h2>
 <p align="center">
-  <img src="/screenshots/demo.gif" align="center" />
+  <img src="/screenshots/cards_demo.gif" align="center" />
+</p>
+<p align="center">
+   <img src="/screenshots/drawer_demo.gif" align="center" />
 </p>
 
 ---
