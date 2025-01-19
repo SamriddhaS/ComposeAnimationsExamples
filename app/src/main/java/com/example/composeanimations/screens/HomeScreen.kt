@@ -19,6 +19,27 @@ fun HomeScreen(modifier: Modifier = Modifier, navigateTo:(route:String)->Unit) {
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
+
+        Button(
+            modifier = Modifier
+                .padding(18.dp)
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally)
+            , onClick = {navigateTo(Routes.SIMPLE_ANIMATIONS_SCREEN)}
+        ) {
+            Text(text = "Basic Animations")
+        }
+
+        Button(
+            modifier = Modifier
+                .padding(18.dp)
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally)
+            , onClick = {navigateTo(Routes.SIMPLE_ANIMATIONS_SCREEN_2)}
+        ) {
+            Text(text = "Basic Animations 2")
+        }
+
         Button(
             modifier = Modifier
                 .padding(18.dp)
@@ -37,16 +58,6 @@ fun HomeScreen(modifier: Modifier = Modifier, navigateTo:(route:String)->Unit) {
             , onClick = {navigateTo(Routes.ANIMATED_DRAWER_WITH_ANCHOR_SCREEN)}
         ) {
             Text(text = "Animated Drawer With Anchor")
-        }
-
-        Button(
-            modifier = Modifier
-                .padding(18.dp)
-                .fillMaxWidth(0.8f)
-                .align(Alignment.CenterHorizontally)
-            , onClick = {navigateTo(Routes.SIMPLE_ANIMATIONS_SCREEN)}
-        ) {
-            Text(text = "Basic Animations")
         }
 
         Button(

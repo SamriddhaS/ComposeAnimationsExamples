@@ -11,9 +11,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.composeanimations.screens.AnimatedDrawerScreen
 import com.example.composeanimations.screens.AnimatedDrawerUsingAnchorScreen
-import com.example.composeanimations.screens.AnimationSpecScreen
+import com.example.composeanimations.screens.SimpleAnimationsScreen
 import com.example.composeanimations.screens.CardsAnimationScreen
 import com.example.composeanimations.screens.HomeScreen
+import com.example.composeanimations.screens.SimpleAnimationsScreenTwo
 import com.example.composeanimations.ui.theme.ComposeAnimationsTheme
 
 object Routes{
@@ -21,6 +22,7 @@ object Routes{
     const val ANIMATED_DRAWER_SCREEN = "animated_drawer_screen"
     const val ANIMATED_DRAWER_WITH_ANCHOR_SCREEN = "animated_drawer_with_anchor_screen"
     const val SIMPLE_ANIMATIONS_SCREEN = "animation_spec_screen"
+    const val SIMPLE_ANIMATIONS_SCREEN_2 = "animation_spec_screen_2"
     const val CARD_ANIMATIONS_SCREEN = "card_animation_screen"
 }
 
@@ -54,7 +56,13 @@ fun AppNavHost(
         }
 
         composable(route = Routes.SIMPLE_ANIMATIONS_SCREEN){
-            AnimationSpecScreen (
+            SimpleAnimationsScreen (
+                modifier = modifier
+            )
+        }
+
+        composable(route = Routes.SIMPLE_ANIMATIONS_SCREEN_2){
+            SimpleAnimationsScreenTwo (
                 modifier = modifier
             )
         }
