@@ -1,7 +1,6 @@
 package com.example.composeanimations.screens
 
 import android.util.Log
-import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -345,7 +344,7 @@ fun SimpleAnimationsScreenTwo(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.Start
         )
         {
-            SequentialAnimation()
+            SequentialAndParallelAnimation()
         }
 
     }
@@ -415,7 +414,7 @@ fun AnimateScaleInLoop(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SequentialAnimation(modifier: Modifier = Modifier) {
+fun SequentialAndParallelAnimation(modifier: Modifier = Modifier) {
     val alphaAnimation = remember { Animatable(0f) }
     val yAnimation = remember { Animatable(0f) }
 
