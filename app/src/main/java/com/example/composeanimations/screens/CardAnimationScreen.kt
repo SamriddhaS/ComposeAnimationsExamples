@@ -3,10 +3,13 @@ package com.example.composeanimations.screens
 import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.Spring.DampingRatioLowBouncy
+import androidx.compose.animation.core.Spring.DampingRatioMediumBouncy
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -15,11 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,9 +40,6 @@ val size = list.size
 
 @Composable
 fun CardsAnimationScreen(modifier: Modifier = Modifier) {
-    var isExpanded by remember {
-        mutableStateOf(false)
-    }
 
     // Using single Animatable transformation to animate all the animations
     // ie : offset , rotation
@@ -55,8 +52,11 @@ fun CardsAnimationScreen(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
-            .pointerInput(Unit){
+            .background(Color.Black),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier.pointerInput(Unit){
                 /*detectTapGestures {
                     if (isExpanded) {
                         coroutineScope.launch {
@@ -73,22 +73,23 @@ fun CardsAnimationScreen(modifier: Modifier = Modifier) {
                 awaitPointerEventScope {
                     while (true) {
                         val event = awaitPointerEvent()
-                        if (event.type== PointerEventType.Press){
+                        if (event.type == PointerEventType.Press){
                             coroutineScope.launch {
-                                translation.animateTo(targetValue = 1f)
+                                translation.animateTo(targetValue = 1f, animationSpec = tween(600, easing = LinearOutSlowInEasing))
                             }
-                        }else if(event.type==PointerEventType.Release){
+                        }else if(event.type == PointerEventType.Release){
                             coroutineScope.launch {
-                                translation.animateTo(targetValue = 0f)
+                                //translation.animateTo(targetValue = 0f,animationSpec = tween(700,easing = LinearOutSlowInEasing))
+                                translation.animateTo(targetValue = 0f, animationSpec = spring(dampingRatio = 0.600f, stiffness = 600f))
                             }
                         }
                     }
                 }
-            },
-        contentAlignment = Alignment.Center
-    ) {
-        list.forEachIndexed { index, i ->
-            Card(index, isExpanded, translation)
+            }
+        ) {
+            list.forEachIndexed { index, i ->
+                Card(index, translation)
+            }
         }
     }
 }
@@ -96,7 +97,6 @@ fun CardsAnimationScreen(modifier: Modifier = Modifier) {
 @Composable
 fun Card(
     index: Int,
-    isExpanded: Boolean,
     transition: Animatable<Float, AnimationVector1D>,
     modifier: Modifier = Modifier
 ) {
