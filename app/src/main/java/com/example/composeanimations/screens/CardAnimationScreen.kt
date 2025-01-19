@@ -1,11 +1,8 @@
 package com.example.composeanimations.screens
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.Spring.DampingRatioLowBouncy
-import androidx.compose.animation.core.Spring.DampingRatioMediumBouncy
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -41,8 +38,10 @@ val size = list.size
 @Composable
 fun CardsAnimationScreen(modifier: Modifier = Modifier) {
 
-    // Using single Animatable transformation to animate all the animations
-    // ie : offset , rotation
+    /*
+    * Using single Animatable transformation to animate all the animations
+    * ie : offset , rotation
+    * */
     val translation = remember {
         Animatable(0f)
     }
@@ -57,20 +56,10 @@ fun CardsAnimationScreen(modifier: Modifier = Modifier) {
     ) {
         Box(
             modifier = Modifier.pointerInput(Unit){
-                /*detectTapGestures {
-                    if (isExpanded) {
-                        coroutineScope.launch {
-                            translation.animateTo(targetValue = 0f)
-                            isExpanded=false
-                        }
-                    }else{
-                        coroutineScope.launch {
-                            translation.animateTo(targetValue = 1f)
-                            isExpanded=true
-                        }
-                    }
-                }*/
                 awaitPointerEventScope {
+                    /*
+                    * Detect : Press/Release gestures.
+                    * */
                     while (true) {
                         val event = awaitPointerEvent()
                         if (event.type == PointerEventType.Press){
@@ -79,7 +68,6 @@ fun CardsAnimationScreen(modifier: Modifier = Modifier) {
                             }
                         }else if(event.type == PointerEventType.Release){
                             coroutineScope.launch {
-                                //translation.animateTo(targetValue = 0f,animationSpec = tween(700,easing = LinearOutSlowInEasing))
                                 translation.animateTo(targetValue = 0f, animationSpec = spring(dampingRatio = 0.600f, stiffness = 600f))
                             }
                         }
@@ -101,9 +89,19 @@ fun Card(
     modifier: Modifier = Modifier
 ) {
 
+    // X Axis translation : index * -40 (start) --> index * 50 (end)
     val xAxisLerp = lerp(index * -40, index * 50, transition.value)
+
+    // Y Axis translation : 0 (no Y translation - start) --> index * 50 (end)
     val yAxisLerp = lerp(0, index * -10, transition.value)
+
     val offset = IntOffset(xAxisLerp, yAxisLerp)
+
+    // Rotate translation : index * -9f (start) --> index * 5f (end)
+    val rotationValue = lerp(index * -9f, index * 5f, transition.value)
+
+    // Alpha : Fade the cards little based on index.
+    val alphaValue = if (index == 0) 1f else (size - index) * 0.7f
 
 //    val offset by animateIntOffsetAsState(
 //        targetValue = if (isExpanded){
@@ -114,14 +112,10 @@ fun Card(
 //        label = "CardsOffset"
 //    )
 
-    val rotationValue = lerp(index * -9f, index * 5f, transition.value)
-
 //    val rotationValue by animateFloatAsState(
 //        targetValue = if (isExpanded) index*5f else index*-9f,
 //        label = "RotationValue"
 //    )
-
-    val alphaValue = if (index == 0) 1f else (size - index) * 0.7f
 
     Box(
         modifier = modifier
