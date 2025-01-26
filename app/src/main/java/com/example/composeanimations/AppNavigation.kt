@@ -1,5 +1,6 @@
 package com.example.composeanimations
 
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.composeanimations.screens.AccelerometerRotateScreen
 import com.example.composeanimations.screens.AnimatedDrawerScreen
 import com.example.composeanimations.screens.AnimatedDrawerUsingAnchorScreen
 import com.example.composeanimations.screens.SimpleAnimationsScreen
@@ -24,11 +26,14 @@ object Routes{
     const val SIMPLE_ANIMATIONS_SCREEN = "animation_spec_screen"
     const val SIMPLE_ANIMATIONS_SCREEN_2 = "animation_spec_screen_2"
     const val CARD_ANIMATIONS_SCREEN = "card_animation_screen"
+    const val ROTATION_USING_ACCELEROMETER = "ROTATION_USING_ACCELEROMETER"
 }
 
 @Composable
 fun AppNavHost(
     navController: NavHostController = rememberNavController(),
+    mainViewModel: MainViewModel,
+    context:Context?,
     modifier: Modifier
     ) {
     NavHost(
@@ -73,14 +78,13 @@ fun AppNavHost(
             )
         }
 
-    }
-}
+        composable(route = Routes.ROTATION_USING_ACCELEROMETER){
+            AccelerometerRotateScreen (
+                mainViewModel = mainViewModel,
+                context = context,
+                modifier = modifier
+            )
+        }
 
-
-@Preview(showBackground = true)
-@Composable
-fun NavHostPreview() {
-    ComposeAnimationsTheme {
-        AppNavHost(modifier = Modifier.padding(8.dp))
     }
 }

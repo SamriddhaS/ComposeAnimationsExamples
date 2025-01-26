@@ -69,5 +69,15 @@ fun HomeScreen(modifier: Modifier = Modifier, navigateTo:(route:String)->Unit) {
         ) {
             Text(text = "Cards Animations")
         }
+
+        Button(
+            modifier = Modifier
+                .padding(18.dp)
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally)
+            , onClick = {navigateTo(Routes.ROTATION_USING_ACCELEROMETER)}
+        ) {
+            Text(text = "Accelerometer Based Animation")
+        }
     }
 }
