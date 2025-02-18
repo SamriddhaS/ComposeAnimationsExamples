@@ -79,5 +79,15 @@ fun HomeScreen(modifier: Modifier = Modifier, navigateTo:(route:String)->Unit) {
         ) {
             Text(text = "Accelerometer Based Animation")
         }
+
+        Button(
+            modifier = Modifier
+                .padding(18.dp)
+                .fillMaxWidth(0.8f)
+                .align(Alignment.CenterHorizontally)
+            , onClick = {navigateTo(Routes.SHAKE_DETECTOR_SCREEN)}
+        ) {
+            Text(text = "Shake Detector")
+        }
     }
 }

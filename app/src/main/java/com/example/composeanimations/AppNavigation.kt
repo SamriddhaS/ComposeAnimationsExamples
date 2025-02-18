@@ -16,6 +16,7 @@ import com.example.composeanimations.screens.AnimatedDrawerUsingAnchorScreen
 import com.example.composeanimations.screens.SimpleAnimationsScreen
 import com.example.composeanimations.screens.CardsAnimationScreen
 import com.example.composeanimations.screens.HomeScreen
+import com.example.composeanimations.screens.ShakeDetectorScreen
 import com.example.composeanimations.screens.SimpleAnimationsScreenTwo
 import com.example.composeanimations.ui.theme.ComposeAnimationsTheme
 
@@ -27,6 +28,7 @@ object Routes{
     const val SIMPLE_ANIMATIONS_SCREEN_2 = "animation_spec_screen_2"
     const val CARD_ANIMATIONS_SCREEN = "card_animation_screen"
     const val ROTATION_USING_ACCELEROMETER = "ROTATION_USING_ACCELEROMETER"
+    const val SHAKE_DETECTOR_SCREEN = "SHAKE_DETECTOR"
 }
 
 @Composable
@@ -80,6 +82,14 @@ fun AppNavHost(
 
         composable(route = Routes.ROTATION_USING_ACCELEROMETER){
             AccelerometerRotateScreen (
+                mainViewModel = mainViewModel,
+                context = context,
+                modifier = modifier
+            )
+        }
+
+        composable(route = Routes.SHAKE_DETECTOR_SCREEN){
+            ShakeDetectorScreen (
                 mainViewModel = mainViewModel,
                 context = context,
                 modifier = modifier

@@ -1,4 +1,4 @@
-package com.example.composeanimations
+package com.example.composeanimations.utils
 
 class LowPassFilter(private val alpha: Float) {
     private var previousX: Float = 0f

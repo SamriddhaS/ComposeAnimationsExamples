@@ -1,4 +1,4 @@
-package com.example.composeanimations
+package com.example.composeanimations.utils
 
 import android.content.Context
 import android.hardware.Sensor
@@ -12,7 +12,7 @@ private const val THRESHOLD = 1f
 
 object MySensorManager {
 
-    private var sensorManager:SensorManager?=null
+    private var sensorManager: SensorManager?=null
     val lowPassFilter = LowPassFilter(ALPHA)
     var previousFilteredValues = Triple(0f, 0f, 0f)
 
@@ -39,6 +39,7 @@ object MySensorManager {
                             previousFilteredValues = filteredValues
                             callBack(x,y,z)
                         }
+                        //callBack(x,y,z)
                     }
                 }
 
