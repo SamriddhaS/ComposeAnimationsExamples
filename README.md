@@ -32,6 +32,9 @@ This repository demonstrates a variety of animation techniques in Jetpack Compos
   <img src="/screenshots/cards_demo.gif" align="center" />
 </p>
 <p align="center">
+  <img src="/screenshots/shake_ditector.gif" align="center" />
+</p>
+<p align="center">
    <img src="/screenshots/drawer_demo.gif" align="center" />
 </p>
 
