@@ -20,6 +20,8 @@ This repository demonstrates a variety of animation techniques in Jetpack Compos
   <li><a href="app/src/main/java/com/example/composeanimations/screens/AnimatedDrawerScreen.kt" target="_blank">AnimatedDrawerScreen</a>: Demonstrates a custom animated drawer implementation </li>
   <li><a href="app/src/main/java/com/example/composeanimations/screens/AnimatedDrawerScreen.kt" target="_blank">AnimatedDrawerUsingAnchorScreen</a> : Animated Drawer with Anchor Screen: Builds on the animated drawer concept using <code>AnchoredDraggableState</code></li>
   <li><a href="app/src/main/java/com/example/composeanimations/screens/CardAnimationScreen.kt" target="_blank">CardsAnimationScreen</a>: Implements animations for a stack of cards, showcasing transformations like offset, rotation, and alpha blending.</li> 
+
+<li><a href="app/src/main/java/com/example/composeanimations/screens/ShakeDetectorScreen.kt" target="_blank">ShakeDetector Using Accelerometer</a>:Shows how can we use accelerometer sensor to detect motion like shake. In this demo I am turing the backlight on/off with it</li> 
   
 </ul>
 
